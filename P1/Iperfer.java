@@ -1,11 +1,11 @@
 import java.util.*;
-// TEST!
 import java.io.*;
 import java.net.*;
 
 public class Iperfer {
 	
     public static void main(String[] args) throws IOException {
+
     	/*CLIENT MODE*/
     	if((args.length == 7) && (args[0].equals("-c"))){
     		
@@ -26,8 +26,8 @@ public class Iperfer {
     			//TODO:
         		//Need to send data chunks of 1000 bytes and data is all 0's
         		byte[] dataChunk = new byte[1000];
-        		long timeNano = time * 1000000000;
-        		long startTime = System.nanoTime();
+        		long timeMillis = time * 1000;
+        		long startTime = System.currentTimeMillis();
         		boolean finished = false;
         		
         		int numSent = 0;
@@ -39,9 +39,9 @@ public class Iperfer {
         			out.print(dataChunk);
    
         			numSent++;
-        			finished = (System.nanoTime() - startTime >= timeNano);    			
+        			finished = (System.currentTimeMillis() - startTime) >= timeMillis;    			
         		}
-        		
+      		
         		// Calculations
 				System.out.println( "sent=" + numSent + " KB " +
 								"rate=" +/* numSent/(time/1000000000) +*/ " Mbps");
@@ -82,6 +82,7 @@ public class Iperfer {
 			// Receive Data
 			while((text = in.readLine()) != null){
 				bytes_received++;
+				System.out.print("1");
 			}
 			
 			// know when client has left, then continue
