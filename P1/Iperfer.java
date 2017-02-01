@@ -44,7 +44,7 @@ public class Iperfer {
         		
         		// Calculations
 				System.out.println( "sent=" + numSent + " KB " +
-								"rate=" + numSent/(time/1000000000) + " Mbps");
+								"rate=" +/* numSent/(time/1000000000) +*/ " Mbps");
 
         		
         		out.close();
@@ -88,7 +88,7 @@ public class Iperfer {
 
 			// Output data
 			System.out.println( "received=" + bytes_received/1000 + " KB " +
-								"rate=" + bytes_received/(1000000*time) + " Mbps");
+								"rate=" + /*bytes_received/(1000000*time) +*/ " Mbps");
 
 			// Shut down server... 
 			serverSoc.close();
