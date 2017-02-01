@@ -1,5 +1,3 @@
-Another test!
-
 Initially (only) copying from online
 	git clone https://github.com/tmarkey24/cs640
 
@@ -13,5 +11,3 @@ Checking in new file
 Check in changed files
 	git commit -am "<comment>"
 	git push origin master
-
-Test
