@@ -20,9 +20,8 @@ public class Iperfer {
     		}
     		
     		try {
-    			Socket clientSocket = new Socket(server_hostname, server_port);
-    			PrintWriter out = new PrintWriter(clientSocket.getOutputStream());
-    			
+    			Socket clientSoc = new Socket(server_hostname, server_port);
+    			PrintWriter out = new PrintWriter(clientSoc.getOutputStream(), true);
     			
     			//TODO:
         		//Need to send data chunks of 1000 bytes and data is all 0's
@@ -35,20 +34,21 @@ public class Iperfer {
         		
         		//Send data for specified time
         		while(!finished){
-        			//TODO:Correct way to send??
-        			//Send data on socket
+   
+	     			//Send data on socket
         			out.print(dataChunk);
-        			
+   
         			numSent++;
-        			
-        			finished = (System.nanoTime() - startTime >= timeNano);
-        			
+        			finished = (System.nanoTime() - startTime >= timeNano);    			
         		}
         		
-        		//TODO: Calculations
+        		// Calculations
+				System.out.println( "sent=" + numSent + " KB " +
+								"rate=" + numSent/(time/1000000000) + " Mbps");
+
         		
         		out.close();
-        		clientSocket.close();
+        		clientSoc.close();
     		}
     		catch (IOException e){
     		}
