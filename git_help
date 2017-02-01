@@ -1,10 +1,13 @@
-Checking Out
+Initially (only) copying from online
 	git clone https://github.com/tmarkey24/cs640
+
+Updating local with online changes
+	git pull
 
 Checking in new file
 	git add <file>
 	git commit -m "<comment>"
 
 Check in changed files
+	git commit -am "<comment>"
 	git push origin master
-
