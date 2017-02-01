@@ -1,0 +1,10 @@
+Checking Out
+	git clone https://github.com/tmarkey24/cs640
+
+Checking in new file
+	git add <file>
+	git commit -m "<comment>"
+
+Check in changed files
+	git push origin master
+
