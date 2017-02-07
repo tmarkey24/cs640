@@ -11,3 +11,7 @@ Checking in new file
 Check in changed files
 	git commit -am "<comment>"
 	git push origin master
+
+Mininet
+	login:	 	ssh -X mininet@mininet-58.cs.wisc.edu
+	password:	beRsil16
