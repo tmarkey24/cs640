@@ -2,13 +2,22 @@ import java.util.*;
 import java.io.*;
 import java.net.*;
 
+/*
+Iperfer
+CS 640 P1
+Aaron Delander:	delander
+Thomas Markey:	markey
+*/
 public class Iperfer {
 	
     public static void main(String[] args) throws IOException {
 
+		///////////////
     	/*CLIENT MODE*/
+		///////////////
     	if((args.length == 7) && (args[0].equals("-c"))){
     		
+			// Get inputs
     		String server_hostname = args[2];
     		int server_port = Integer.parseInt(args[4]);
     		int time = Integer.parseInt(args[6]);
@@ -19,50 +28,44 @@ public class Iperfer {
     			System.exit(1);
     		}
     		
-    		try {
-    			Socket clientSoc = new Socket(server_hostname, server_port);
-    			PrintWriter out = new PrintWriter(clientSoc.getOutputStream(), true);
+    		Socket clientSoc = new Socket(server_hostname, server_port);
+    		PrintWriter out = new PrintWriter(clientSoc.getOutputStream(), true);
     			
-    			//TODO:
-        		//Need to send data chunks of 1000 bytes and data is all 0's
-        		byte[] dataChunk = new byte[1000];
-        		long timeMillis = time * 1000;
-        		long startTime = System.currentTimeMillis();
-        		boolean finished = false;
+        	// Send data chunks of 1000 bytes and data is all 0's
+        	char[] dataChunk = new char[1000];
+        	long timeMillis = time * 1000;
+        	long startTime = System.currentTimeMillis();
+        	boolean finished = false;
         		
-        		int numSent = 0;
+        	int numSent = 0;
         		
-        		//Send data for specified time
-        		while(!finished){
-   
-	     			//Send data on socket
-        			out.print(dataChunk);
-   
-        			numSent++;
-        			finished = (System.currentTimeMillis() - startTime) >= timeMillis;    			
-        		}
-      		
-        		// Calculations
-				System.out.println( "sent=" + numSent + " KB " +
-								"rate=" +/* numSent/(time/1000000000) +*/ " Mbps");
+        	//Send data for specified time
+        	while(!finished){
+        		out.write(dataChunk);
+        		numSent++;
+				finished = (System.currentTimeMillis() - startTime) >= timeMillis;
+			}
 
-        		
-        		out.close();
-        		clientSoc.close();
-    		}
-    		catch (IOException e){
-    		}
-    		
+        	// Calculations
+			double rate =  numSent / (time*1000.0);
+			System.out.printf("sent=%d KB rate=%.3f Mbps\n",numSent, rate);
+
+        	// Shut down client sockets	
+    		out.close();
+    		clientSoc.close();
     	}
+
+		///////////////
     	/*SERVER MODE*/
+		///////////////
     	else if((args.length == 3) && (args[0].equals("-s"))){
 
     		int listen_port = Integer.parseInt(args[2]);
 			int bytes_received = 0;
-			int time = 0;	// seconds
-			String text;
+			int start_time = 0;
+			int end_time = 0;
     		
-    		//Assure range for listen port
+    		// Assure range for listen port
     		if (listen_port < 1024 || listen_port > 65535){
     			System.out.println("Error: port number must be in the range 1024 to 65535");
     			System.exit(1);
@@ -70,33 +73,36 @@ public class Iperfer {
 
 			// Create server socket that listens to specified port
     		ServerSocket serverSoc = new ServerSocket(listen_port);
-			System.out.println("Waiting for client connection...");	// debug
+			System.out.println("Waiting for client connection...");	// TODO: delete debug
 			
+			// Record time when connection occurs
 			Socket clientSoc = serverSoc.accept();
-			System.out.println("Client connection made!");	// debug
+			System.out.println("Client connection made!");	// TODO: delete debug
+			start_time = (int) (System.currentTimeMillis() / 1000); 
 
 			BufferedReader in = new BufferedReader(			// input stream
 									new InputStreamReader(clientSoc.getInputStream())
 								);
 
 			// Receive Data
-			while((text = in.readLine()) != null){
+			while(in.read() != -1) {
 				bytes_received++;
-				System.out.print("1");
 			}
 			
-			// know when client has left, then continue
-
-			// Output data
-			System.out.println( "received=" + bytes_received/1000 + " KB " +
-								"rate=" + /*bytes_received/(1000000*time) +*/ " Mbps");
-
-			// Shut down server... 
+			// Calculations
+			end_time = (int) (System.currentTimeMillis() / 1000); // get end time in seconds
+			int duration = end_time - start_time;
+			double rate =  bytes_received / (duration*1000000.0);
+			System.out.printf("received=%d KB rate=%.3f Mbps\n", bytes_received/1000, rate);
+			
+			// Shut down server
 			serverSoc.close();
-			clientSoc.close();
-    		
+			clientSoc.close();	
     	}
+
+		///////////////////////
     	/*INCORRECT ARGUMENTS*/
+		///////////////////////
     	else {
     		System.out.println("Error: missing or additional arguments");
     		
